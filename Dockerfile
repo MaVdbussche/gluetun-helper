@@ -3,7 +3,7 @@
 # (using this Gradle Wrapper version) remains aligned with the production Dockerfile (using vanilla Gradle)
 FROM gradle:8.7-alpine AS build
 
-RUN ["gradle", "clean"]
+RUN ["gradle", "init"]
 COPY ./app /app
 
 WORKDIR /app
