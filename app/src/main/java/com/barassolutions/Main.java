@@ -16,16 +16,15 @@ import okhttp3.Response;
 
 public class Main {
 
-  public static final Logger logger = new Logger(LogLevel.TRACE);
+  public static final Logger logger = new Logger(LogLevel.valueOf(System.getenv("LOGLEVEL")));
   private static OkHttpClient client = new OkHttpClient();
 
   private static String SID;
 
-  //TODO Read https://12factor.net/config and use exclusively the Dockerfile
-  private static final String GLUETUN_URL = getEnvOrDefault("GLUETUN_URL","http://localhost:8000");
-  private static final String QBITTORRENT_URL = getEnvOrDefault("QBITTORRENT_URL", "http://localhost:8090");
-  private static final String QBITTORRENT_USERNAME = getEnvOrDefault("QBITTORRENT_USERNAME", "admin");
-  private static final String QBITTORRENT_PASSWORD = getEnvOrDefault("QBITTORRENT_PASSWORD", "adminadmin");
+  private static final String GLUETUN_URL = System.getenv("GLUETUN_URL");
+  private static final String QBITTORRENT_URL = System.getenv("QBITTORRENT_URL");
+  private static final String QBITTORRENT_USERNAME = System.getenv("QBITTORRENT_USERNAME");
+  private static final String QBITTORRENT_PASSWORD = System.getenv("QBITTORRENT_PASSWORD");
 
   public static void main(String[] args) throws IOException {
 
