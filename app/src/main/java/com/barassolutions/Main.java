@@ -1,7 +1,5 @@
 package com.barassolutions;
 
-import static com.barassolutions.util.Environment.getEnvOrDefault;
-
 import com.barassolutions.util.Logger;
 import com.barassolutions.util.Logger.LogLevel;
 import java.io.IOException;
