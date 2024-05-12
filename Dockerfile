@@ -18,7 +18,7 @@ ENV GLUETUN_URL="http://localhost:8000"
 ENV QBITTORRENT_URL="http://localhost:8090"
 ENV QBITTORRENT_USERNAME="admin"
 ENV QBITTORRENT_PASSWORD="adminadmin"
-ENV LOGLEVEL="INFO"
+Renamed LOGLEVEL to align on GLuetunENV LOG_LEVEL="INFO"
 
 WORKDIR /app
 

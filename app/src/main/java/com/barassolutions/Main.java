@@ -16,7 +16,7 @@ import okhttp3.Response;
 
 public class Main {
 
-  public static final Logger logger = new Logger(LogLevel.valueOf(System.getenv("LOGLEVEL")));
+  public static final Logger logger = new Logger(LogLevel.valueOf(System.getenv("LOG_LEVEL")));
   private static OkHttpClient client = new OkHttpClient();
 
   private static String SID;
