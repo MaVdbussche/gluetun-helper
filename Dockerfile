@@ -12,8 +12,6 @@ RUN ["gradle", "jar"]
 
 FROM azul/zulu-openjdk-alpine:21-latest
 
-LABEL authors="MaVdbussche (Barasingha)"
-
 ENV GLUETUN_URL="http://localhost:8000"
 ENV QBITTORRENT_URL="http://localhost:8090"
 ENV QBITTORRENT_USERNAME="admin"
