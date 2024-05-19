@@ -12,15 +12,6 @@ RUN ["gradle", "jar"]
 
 FROM azul/zulu-openjdk-alpine:21-latest
 
-LABEL org.opencontainers.image.authors="MaVdbussche (Barasingha)"
-LABEL org.opencontainers.image.url="https://github.com/MaVdbussche/gluetun-helper"
-LABEL org.opencontainers.image.documentation="https://github.com/MaVdbussche/gluetun-helper"
-LABEL org.opencontainers.image.source="https://github.com/MaVdbussche/gluetun-helper"
-LABEL org.opencontainers.image.vendor="Barassolutions"
-LABEL org.opencontainers.image.licenses="Apache-2.0"
-LABEL org.opencontainers.image.title="Gluetun Helper"
-LABEL org.opencontainers.image.description="A small script to update open ports in your torrent client(s), sabed on the port forwarded in Gluetun/your VPN provider."
-
 ENV GLUETUN_URL="http://localhost:8000"
 ENV QBITTORRENT_URL="http://localhost:8090"
 ENV QBITTORRENT_USERNAME="admin"
