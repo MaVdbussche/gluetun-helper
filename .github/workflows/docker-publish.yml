@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
   push:
     branches: [ "master" ]
-    # Publish semver tags as releases.
+    # On tag pushes using semver
     tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ "master" ]
@@ -82,9 +82,10 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             # Don't output '0' (unstable API)
             type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/v0.') }}
+            # Last commit on master
             type=edge,branch=master
+            # Tag per pull request
             type=ref,event=pr
-            type=sha
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
