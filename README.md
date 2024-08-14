@@ -117,8 +117,8 @@ services:
   gluetun-helper:
      [...]
      environment:
-       - GLUETUN_URL=http://192.168.1.2:8000
-       - QBITTORRENT_URL=http://192.168.1.2:8090 # All qBittorrent traffic goes through Gluetun => this is the de facto adress of qBittorrent Web UI.
+       - GLUETUN_URL=http://1.2.3.4:8000
+       - QBITTORRENT_URL=http://1.2.3.4:8090 # All qBittorrent traffic goes through Gluetun => this is the de facto adress of qBittorrent Web UI.
        - QBITTORRENT_USERNAME=XXXXX
        - QBITTORRENT_PASSWORD=XXXXXXXXXXXX
      ports: [] # This container doesn't need to expose any port to function
