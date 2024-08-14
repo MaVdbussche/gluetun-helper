@@ -6,6 +6,10 @@ import java.io.IOException;
 import com.google.gson.*;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -23,9 +27,19 @@ public class Main {
   private static final String QBITTORRENT_URL = System.getenv("QBITTORRENT_URL");
   private static final String QBITTORRENT_USERNAME = System.getenv("QBITTORRENT_USERNAME");
   private static final String QBITTORRENT_PASSWORD = System.getenv("QBITTORRENT_PASSWORD");
+  private static final String UPDATE_WINDOW_SECONDS = System.getenv("UPDATE_WINDOW_SECONDS");
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
 
+    Runnable helloRunnable = () -> updatePort();
+
+    // Investigate new Java Virtual threads ?
+    try (ScheduledExecutorService executor = Executors.newScheduledThreadPool(1)) {
+        executor.scheduleAtFixedRate(helloRunnable, 0, Math.max(Integer.parseInt(UPDATE_WINDOW_SECONDS), 5), TimeUnit.SECONDS);
+    }
+  }
+
+  private static void updatePort() {
     int port = getCurrentPortFromGluetun();
     if (port < 0) {
       System.exit(1);
@@ -50,7 +64,7 @@ public class Main {
     System.exit(0);
   }
 
-  private static boolean logInqBittorrent() throws IOException {
+  private static boolean logInqBittorrent() {
     final String url = QBITTORRENT_URL + "/api/v2/auth/login";
     logger.info("Logging in qBittorrent at " + url);
 
@@ -82,6 +96,9 @@ public class Main {
     } catch (NoSuchElementException noSuchElementException) {
       logger.error("No authentication cookie returned by qBittorrent. Stopping here.");
       return false;
+    } catch (IOException ioException) {
+      logger.error("Error logging in qBittorrent. Stopping here.");
+      return false;
     }
 
     // From now one every request will be authenticated
@@ -98,7 +115,7 @@ public class Main {
     return true;
   }
 
-  private static boolean logOutQBittorrent() throws IOException {
+  private static boolean logOutQBittorrent() {
     final String url = QBITTORRENT_URL + "/api/v2/auth/logout";
     logger.info("Logging out of qBittorrent at " + url);
 
@@ -114,13 +131,16 @@ public class Main {
         response.close();
         return false;
       }
+    } catch (IOException ioException) {
+      logger.error("Error logging out of qBittorrent. Stopping here.");
+      return false;
     }
 
     logger.debug("Client is logged out.");
     return true;
   }
 
-  private static int getCurrentPortFromGluetun() throws IOException {
+  private static int getCurrentPortFromGluetun() {
     final String url = GLUETUN_URL + "/v1/openvpn/portforwarded"; //Actually not only for OpenVPN
     logger.info("Getting the current forwarded port from Gluetun at " + url);
 
@@ -158,10 +178,13 @@ public class Main {
         response.close();
         return -1;
       }
+    } catch (IOException ioException) {
+      logger.error("Error getting current port from qBittorrent. Stopping here.");
+      return -1;
     }
   }
 
-  private static boolean defineIncomingPort(int port) throws IOException {
+  private static boolean defineIncomingPort(int port) {
     final String url = QBITTORRENT_URL + "/api/v2/app/setPreferences";
     logger.info("Updating qBittorrent settings");
 
@@ -182,6 +205,9 @@ public class Main {
         response.close();
         return false;
       }
+    } catch (IOException ioException) {
+      logger.error("Error updating qBittorrent incoming port. Stopping here.");
+      return false;
     }
 
     logger.debug("Settings successfully updated.");
