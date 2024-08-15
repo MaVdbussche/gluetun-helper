@@ -27,7 +27,7 @@ application {
 }
 
 tasks.named<Jar>("jar") {
-    archiveClassifier = "fatjar" // Append "-fatjar" at the end of the generated jar file
+    archiveClassifier = "" // Append "" (nothing) at the end of the generated jar file
     manifest {
         attributes["Main-Class"] = "com.barassolutions.Main"
     }
