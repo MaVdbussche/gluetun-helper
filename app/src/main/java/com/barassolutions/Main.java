@@ -31,12 +31,11 @@ public class Main {
 
   public static void main(String[] args) {
 
-    Runnable helloRunnable = () -> updatePort();
+    Runnable helloRunnable = Main::updatePort;
 
     // Investigate new Java Virtual threads ?
-    try (ScheduledExecutorService executor = Executors.newScheduledThreadPool(1)) {
-        executor.scheduleAtFixedRate(helloRunnable, 0, Math.max(Integer.parseInt(UPDATE_WINDOW_SECONDS), 5), TimeUnit.SECONDS);
-    }
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    executor.scheduleAtFixedRate(helloRunnable, 0, Math.max(Integer.parseInt(UPDATE_WINDOW_SECONDS), 5), TimeUnit.SECONDS);
   }
 
   private static void updatePort() {
