@@ -74,7 +74,7 @@ jobs:
             org.opencontainers.image.vendor=Barassolutions
             org.opencontainers.image.licenses=Apache-2.0
             org.opencontainers.image.title=Gluetun Helper
-            org.opencontainers.image.description=A small script to update open ports in your torrent client(s), sabed on the port forwarded in Gluetun/your VPN provider.
+            org.opencontainers.image.description=A small script to update open ports in your torrent client(s), based on the port forwarded in Gluetun/your VPN provider.
           tags: |
             # output 0.1.2
             type=semver,pattern={{version}}
