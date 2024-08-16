@@ -146,7 +146,7 @@ docker run gluetun-helper:gluetun-helper
 If you feel like you found a bug in the program, please raise an issue on GitHub.<br/>You can also use issues to request new features.
 
 ## License
-This program is licensed under the [Apache License, Version 2.0](https://github.com/MaVdbussche/gluetun-helper/blob/master/LICENSE)
+This program is licensed under the [Apache License, Version 2.0](https://github.com/MaVdbussche/gluetun-helper/blob/master/LICENSE)<br/>
 This program uses the following dependencies:
 - [OkHttp](https://square.github.io/okhttp/), licensed under the [Apache License, Version 2.0](https://square.github.io/okhttp/#license)
 - [Gson](https://github.com/google/gson), licensed under the [Apache License, Version 2.0](https://github.com/google/gson/blob/main/LICENSE)
