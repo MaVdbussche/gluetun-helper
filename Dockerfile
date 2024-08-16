@@ -12,11 +12,9 @@ RUN ["gradle", "jar"]
 
 FROM azul/zulu-openjdk-alpine:21-latest
 
-ENV GLUETUN_URL="http://localhost:8000"
-ENV QBITTORRENT_URL="http://localhost:8080"
 ENV QBITTORRENT_USERNAME="admin"
 ENV QBITTORRENT_PASSWORD="adminadmin"
-ENV UPDATE_WINDOW_SECONDS="5"
+ENV UPDATE_WINDOW_SECONDS="45"
 ENV LOG_LEVEL="INFO"
 
 WORKDIR /app
