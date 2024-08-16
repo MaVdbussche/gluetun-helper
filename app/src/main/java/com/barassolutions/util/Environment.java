@@ -2,15 +2,24 @@ package com.barassolutions.util;
 
 import static com.barassolutions.Main.logger;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Environment {
 
-  public static String getEnvOrDefault(String name, String defaultValue) {
+  @NotNull
+  public static String getEnvOrDefault(String name, String defaultValue, boolean mandatory) {
     String result = System.getenv(name);
-    if (result!=null) {
-      return result;
+    if (mandatory && result == null) {
+      logger.error("Mandatory environment value \"" + name + "\" was not defined.");
+      System.exit(1);
+      return null;
     } else {
-      logger.debug("Environment value " + name + " was not defined. The default value will be used, but you should probably adjust your configuration.");
-      return defaultValue;
+      if (result == null) {
+        logger.debug("Environment value \"" + name + "\" was not defined. The default value will be used. If necessary, adjust your configuration.");
+        return defaultValue;
+      } else {
+        return result;
+      }
     }
   }
 }
