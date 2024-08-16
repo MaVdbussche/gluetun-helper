@@ -5,6 +5,7 @@ public class Logger {
   protected LogLevel activeLogLevel;
 
   public Logger() {
+    this.activeLogLevel = LogLevel.ALL;
   }
 
   // Convention on Logging levels taken from https://logging.apache.org/log4j/2.x/log4j-api/apidocs/index.html
