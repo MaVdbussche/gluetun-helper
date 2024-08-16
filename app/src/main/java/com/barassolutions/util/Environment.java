@@ -18,7 +18,7 @@ public class Environment {
         logger.debug("Environment value \"" + name + "\" was not defined. The default value (\"" + defaultValue + "\") will be used. If necessary, adjust your configuration.");
         return defaultValue;
       } else {
-        logger.debug("Environment value \"" + name + "\" was defined with value \"" + result + "\".");
+        logger.trace("Environment value \"" + name + "\" was defined with value \"" + result + "\".");
         return result;
       }
     }
