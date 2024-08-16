@@ -8,7 +8,7 @@ COPY ./app /app
 
 WORKDIR /app
 
-RUN ["gradle", "jar"]
+RUN ["gradle", "jar", "--status"]
 
 FROM azul/zulu-openjdk-alpine:21-latest
 
