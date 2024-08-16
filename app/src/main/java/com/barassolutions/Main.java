@@ -19,7 +19,7 @@ import okhttp3.Response;
 
 public class Main {
 
-  public static final Logger logger = new Logger(LogLevel.valueOf(Environment.getEnvOrDefault("LOG_LEVEL", "INFO", false)));
+  public static final Logger logger = new Logger();
   private static OkHttpClient client = new OkHttpClient();
 
   private static String SID;
@@ -31,6 +31,7 @@ public class Main {
   private static final String UPDATE_WINDOW_SECONDS = Environment.getEnvOrDefault("UPDATE_WINDOW_SECONDS", "45", false);
 
   public static void main(String[] args) {
+    logger.setLogLevel(LogLevel.valueOf(Environment.getEnvOrDefault("LOG_LEVEL", "INFO", false)));
 
     Runnable runnable = Main::updatePort;
 
