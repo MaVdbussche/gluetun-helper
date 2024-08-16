@@ -1,5 +1,6 @@
 package com.barassolutions;
 
+import com.barassolutions.util.Environment;
 import com.barassolutions.util.Logger;
 import com.barassolutions.util.Logger.LogLevel;
 import java.io.IOException;
@@ -18,16 +19,16 @@ import okhttp3.Response;
 
 public class Main {
 
-  public static final Logger logger = new Logger(LogLevel.valueOf(System.getenv("LOG_LEVEL")));
+  public static final Logger logger = new Logger(LogLevel.valueOf(Environment.getEnvOrDefault("LOG_LEVEL", "INFO", false)));
   private static OkHttpClient client = new OkHttpClient();
 
   private static String SID;
 
-  private static final String GLUETUN_URL = System.getenv("GLUETUN_URL");
-  private static final String QBITTORRENT_URL = System.getenv("QBITTORRENT_URL");
-  private static final String QBITTORRENT_USERNAME = System.getenv("QBITTORRENT_USERNAME");
-  private static final String QBITTORRENT_PASSWORD = System.getenv("QBITTORRENT_PASSWORD");
-  private static final String UPDATE_WINDOW_SECONDS = System.getenv("UPDATE_WINDOW_SECONDS");
+  private static final String GLUETUN_URL = Environment.getEnvOrDefault("GLUETUN_URL", null, true);
+  private static final String QBITTORRENT_URL = Environment.getEnvOrDefault("QBITTORRENT_URL", null, true);
+  private static final String QBITTORRENT_USERNAME = Environment.getEnvOrDefault("QBITTORRENT_USERNAME", "admin", false);
+  private static final String QBITTORRENT_PASSWORD = Environment.getEnvOrDefault("QBITTORRENT_PASSWORD", "adminadmin", false);
+  private static final String UPDATE_WINDOW_SECONDS = Environment.getEnvOrDefault("UPDATE_WINDOW_SECONDS", "45", false);
 
   public static void main(String[] args) {
 
