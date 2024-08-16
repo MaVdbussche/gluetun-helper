@@ -36,7 +36,9 @@ public class Main {
 
     // Investigate new Java Virtual threads ?
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    executor.scheduleAtFixedRate(runnable, 0, Math.max(Integer.parseInt(UPDATE_WINDOW_SECONDS), 5), TimeUnit.SECONDS);
+    int window = Math.max(Integer.parseInt(UPDATE_WINDOW_SECONDS), 5);
+    logger.debug("The script will be executed every " + window + " seconds.");
+    executor.scheduleAtFixedRate(runnable, 0, window, TimeUnit.SECONDS);
   }
 
   private static void updatePort() {

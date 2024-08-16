@@ -15,9 +15,10 @@ public class Environment {
       return null;
     } else {
       if (result == null) {
-        logger.debug("Environment value \"" + name + "\" was not defined. The default value will be used. If necessary, adjust your configuration.");
+        logger.debug("Environment value \"" + name + "\" was not defined. The default value (\"" + defaultValue + "\") will be used. If necessary, adjust your configuration.");
         return defaultValue;
       } else {
+        logger.debug("Environment value \"" + name + "\" was defined with value \"" + result + "\".");
         return result;
       }
     }
