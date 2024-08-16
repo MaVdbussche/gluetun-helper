@@ -2,10 +2,9 @@ package com.barassolutions.util;
 
 public class Logger {
 
-  protected final LogLevel activeLogLevel;
+  protected LogLevel activeLogLevel;
 
-  public Logger(LogLevel activeLogLevel) {
-    this.activeLogLevel = activeLogLevel;
+  public Logger() {
   }
 
   // Convention on Logging levels taken from https://logging.apache.org/log4j/2.x/log4j-api/apidocs/index.html
@@ -24,14 +23,10 @@ public class Logger {
     LogLevel(String image) {
       this.image = image;
     }
-
-    public String image() {
-      return this.image;
-    }
   }
 
-  public LogLevel logLevel() {
-    return this.activeLogLevel;
+  public void setLogLevel(LogLevel level) {
+    this.activeLogLevel = level;
   }
 
   public void fatal(String message, Object... args) {
