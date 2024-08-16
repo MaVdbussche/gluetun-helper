@@ -32,36 +32,34 @@ public class Main {
 
   public static void main(String[] args) {
 
-    Runnable helloRunnable = Main::updatePort;
+    Runnable runnable = Main::updatePort;
 
     // Investigate new Java Virtual threads ?
     ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    executor.scheduleAtFixedRate(helloRunnable, 0, Math.max(Integer.parseInt(UPDATE_WINDOW_SECONDS), 5), TimeUnit.SECONDS);
+    executor.scheduleAtFixedRate(runnable, 0, Math.max(Integer.parseInt(UPDATE_WINDOW_SECONDS), 5), TimeUnit.SECONDS);
   }
 
   private static void updatePort() {
     int port = getCurrentPortFromGluetun();
     if (port < 0) {
-      System.exit(1);
+      return;
     }
 
     if (!logInqBittorrent()) {
-      System.exit(1);
+      return;
     }
 
     if (!defineIncomingPort(port)) {
       logger.info("Attempting to logout from qBittorrent");
       logOutQBittorrent(); //Best effort
-      System.exit(1);
+      return;
     }
 
     if (!logOutQBittorrent()) {
-      System.exit(1);
+      return;
     }
 
     logger.info("Program completed successfully. Exiting.");
-
-    System.exit(0);
   }
 
   private static boolean logInqBittorrent() {
