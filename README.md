@@ -35,28 +35,35 @@ However, I decided to create my own solution for several reasons :
 - I wanted to build something myself;
 - I plan on expanding this program in the future to support other torrent clients
 
-## How to use
+## Why Docker ?
 This script is packaged as a Docker container. The reason for this are multiple :
 - This simplifies the distribution and makes this program available to all, regardless of the platform they use;
 - Since Gluetun is, to my knowledge, only distributed as a Docker container, you will already be using Docker if you have the need for this repository;
 - I wanted to gain more experience with Docker images and their build pipeline
 
-To run this program, simply pull the image `ghcr.io/mavdbussche/gluetun-helper:${TAG}`, 
-where `${TAG}` is the image version tag (see 'Packages' on the right for a list of available tags).<br/>
-You can also consult the `docker-compose.yml` file at the root of this repository for an example configuration if you use Docker Compose.
+## How to use
+
+This program is meant to be used in combination with the [VPN_PORT_FORWARDING_UP_COMMAND](https://github.com/qdm12/gluetun-wiki/blob/main/setup/advanced/vpn-port-forwarding.md#custom-port-forwarding-updown-command)
+environment variable built into Gluetun (see [Gluetun PR#2399](https://github.com/qdm12/gluetun/pull/2399)).
+
+To run this program, simply put the following command as the `VPN_PORT_FORWARDING_UP_COMMAND` environment variable in Gluetun :
+`/bin/sh -c "docker compose --file ./paht/to/compose/file.yml" run --rm gluetun-helper`
+
+You can also consult the `docker-compose.yml` file at the root of this repository for an example configuration.
 
 ## Configuration
 To use this container, you will need to define some environment variables that are specific to your setup.
 Some defaults are provided, but they will most likely not work for you !
 
-| Variable                | Mandatory | Default value           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-|-------------------------|-----------|-------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `GLUETUN_URL`           | *         | `http://localhost:8000` | Full URL to your Gluetun container's [control server](https://github.com/qdm12/gluetun-wiki/blob/main/setup/advanced/control-server.md).<br/>If Gluetun is accessible on the LAN, specify the IP address and the exposed port (for example, `http://1.2.3.4:1234`).<br/>If this program accesses Gluetun through a bridge Docker network (recommended), use the hostname form with the internal port (always 8000) (for example, `http://gluetun:8000`) |
-| `QBITTORRENT_URL`       | *         | `http://localhost:8080` |                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `QBITTORRENT_USERNAME`  |           | `admin`                 | Credentials to connect to the qBittorrent Web UI. Default is the default value defined in the qBittorrent project.                                                                                                                                                                                                                                                                                                                                      |
-| `QBITTORRENT_PASSWORD`  |           | `adminadmin`            | Credentials to connect to the qBittorrent Web UI. Default is the default value defined in the qBittorrent project.                                                                                                                                                                                                                                                                                                                                      |
-| `UPDATE_WINDOW_SECONDS` |           | `45`                    | Refresh window (in seconds, no unit) to periodically send the updated port to the download client.<br/>Default (45s) is the refresh period for Gluetun with the Wireguard protocol.<br/>The program enforces a minimum of 5s to avoid unnecessary load.                                                                                                                                                                                                 |
-| `LOG_LEVEL`             |           | `INFO`                  | Possible values : `OFF`, `FATAL`, `ERROR`, `WARN`, `INFO`, `DEBUG`, `TRACE`, `ALL`                                                                                                                                                                                                                                                                                                                                                                      |
+| Variable               | Mandatory | Default value | Description                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+|------------------------|-----------|---------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `GLUETUN_URL`          | *         |               | Full URL to your Gluetun container's [control server](https://github.com/qdm12/gluetun-wiki/blob/main/setup/advanced/control-server.md).<br/>If Gluetun is accessible on the LAN, specify the IP address and the exposed port (for example, `http://1.2.3.4:1234`).<br/>If this program accesses Gluetun through a bridge Docker network (recommended), use the hostname form with the internal port (always 8000) (for example, `http://gluetun:8000`). |
+| `QBITTORRENT_URL`      | *         |               | Full URL to your qBittorrent Web UI. If Gluetun is accessible on the LAN, specify the IP address and the exposed port (for example, http://1.2.3.4:8080). If this program accesses Gluetun through a bridge Docker network (recommended), use the hostname form with the internal port (always 8080) (for example, http://gluetun:8080).                                                                                                                 |
+| `QBITTORRENT_USERNAME` |           | `admin`       | Credentials to connect to the qBittorrent Web UI. Default is the default value defined in the qBittorrent project.                                                                                                                                                                                                                                                                                                                                       |
+| `QBITTORRENT_PASSWORD` |           | `adminadmin`  | Credentials to connect to the qBittorrent Web UI. Default is the default value defined in the qBittorrent project.                                                                                                                                                                                                                                                                                                                                       |
+| `LOG_LEVEL`            |           | `INFO`        | Possible values : `OFF`, `FATAL`, `ERROR`, `WARN`, `INFO`, `DEBUG`, `TRACE`, `ALL`                                                                                                                                                                                                                                                                                                                                                                       |
+
+***WARNING* : Setting the `LOG_LEVEL` variable to `TRACE` or higher will print the environment variables (including passwords and session cookie) to the console in plain text !**
 
 ## Docker network config
 It is recommended to run this container on a Docker bridge network shared with Gluetun. 
@@ -70,6 +77,9 @@ services:
      hostname: gluetun
      ports: N/A # No exposed ports necessary if Docker networks are used
      networks: [ "some-network" ] # Shared with gluetun-helper
+     environment:
+       [...]
+       - VPN_PORT_FORWARDING_UP_COMMAND: "/bin/sh -c "docker compose --file ./path/to/compose/file.yml" run --rm gluetun-helper"
   qbittorrent:
      [...]
      environment:
