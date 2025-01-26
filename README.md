@@ -47,9 +47,10 @@ This program is meant to be used in combination with the [VPN_PORT_FORWARDING_UP
 environment variable built into Gluetun (see [Gluetun PR#2399](https://github.com/qdm12/gluetun/pull/2399)).
 
 To run this program, simply put the following command as the `VPN_PORT_FORWARDING_UP_COMMAND` environment variable in Gluetun :
-`/bin/sh -c 'docker compose --file ./path/to/compose/file.yml run --rm gluetun-helper'`
+`/bin/sh -c 'port-forward-up.sh'`
 
-You can also consult the `docker-compose.yml` file at the root of this repository for an example configuration.
+The script/command file is then responsible for starting up `gluetun-helper` with any option you'd like.
+You can consult the `port-forward-up.sh` file at the root of this repository for an example configuration.
 
 ## Configuration
 To use this container, you will need to define some environment variables that are specific to your setup.
@@ -68,79 +69,26 @@ Some defaults are provided, but they will most likely not work for you !
 ## Docker network config
 It is recommended to run this container on a Docker bridge network shared with Gluetun. 
 While qBittorrent is probably running *through* Gluetun if you need this script in the first place, that is not recommended/necessary for `gluetun-helper`. 
-I propose two approaches for your `docker-compose.yml` file :
-### Approach A (Docker networks) :
-```
-services:
-  gluetun:
-     [...]
-     hostname: gluetun
-     ports: N/A # No exposed ports necessary if Docker networks are used
-     networks: [ "some-network" ] # Shared with gluetun-helper
-     environment:
-       [...]
-       - VPN_PORT_FORWARDING_UP_COMMAND: "/bin/sh -c 'docker compose --file ./path/to/compose/file.yml run --rm gluetun-helper'"
-  qbittorrent:
-     [...]
-     environment:
-       -WEBUI_PORT=8080
-     network_mode: "container:gluetun" # This container access the network through Gluetun's Docker namespace
-     ports: N/A
-     networks: N/A # All traffic goes through Gluetun; nothing can/should contact this container directly
-     depends_on:
-       gluetun:
-         condition: service_healthy
-         restart: true
-  gluetun-helper:
-     [...]
-     environment:
-       - GLUETUN_URL=http://gluetun:8000
-       - QBITTORRENT_URL=http://gluetun:8080 # All qBittorrent traffic goes through Gluetun => this is the de facto address of qBittorrent Web UI.
-       - QBITTORRENT_USERNAME=XXXXX
-       - QBITTORRENT_PASSWORD=XXXXXXXXXXXX
-     ports: N/A # This container doesn't need to expose any port to function
-     networks: [ "some-network" ] # Shared with Gluetun
-     depends_on:
-       gluetun:
-         condition: service_healthy
-       qbittorrent:
-         condition: service_started
-```
+I propose two approaches for your script/command file :
+### Approach A (Docker networks) (Recommended):
+
+See [port-fowardup.sh](./port-forward-up.sh)
+
 ### Approach B (open ports) :
 ```
-services:
-  gluetun:
-     [...]
-     ports:
-       - "1.2.3.4:8000:8000" # Gluetun control server runs on 8000
-       - "1.2.3.4:8080:8080" # qBittorrent's web UI
-  qbittorrent:
-     [...]
-     environment:
-       -WEBUI_PORT=8080
-     network_mode: "container:gluetun" # This container access the network through Gluetun's Docker namespace
-     ports: N/A
-     depends_on:
-       gluetun:
-         condition: service_healthy
-         restart: true
-  gluetun-helper:
-     [...]
-     environment:
-       - GLUETUN_URL=http://1.2.3.4:8000
-       - QBITTORRENT_URL=http://1.2.3.4:8080 # All qBittorrent traffic goes through Gluetun => this is the de facto adress of qBittorrent Web UI.
-       - QBITTORRENT_USERNAME=XXXXX
-       - QBITTORRENT_PASSWORD=XXXXXXXXXXXX
-     ports: [] # This container doesn't need to expose any port to function
-     depends_on:
-       gluetun:
-         condition: service_healthy
-       qbittorrent:
-         condition: service_started
+docker run --rm --net gluetun-back-net \
+--name gluetun-helper -h gluetun-helper \
+-e GLUETUN_URL=http://1.2.3.4:8000 \
+-e QBITTORRENT_URL=http://1.2.3.4:8090 \
+-e QBITTORRENT_USERNAME=admin \
+-e QBITTORRENT_PASSWORD=adminadmin \
+-e LOG_LEVEL=INFO \
+ghcr.io/mavdbussche/gluetun-helper:${TAG}
 ```
 
 ## Set up the development environment
-This project is built with Gradle. A distribution of Gradle Wrapper is included with this repository. Clone this repository, then execute the following commands to build and run the code locally :
+This project is built with Gradle. A distribution of Gradle Wrapper is included with this repository.
+Clone this repository, then execute the following commands to build and run the code locally :
 ```
 ./gradlew init # Prepare the environment
 ./gradlew jar # To build an executable JAR
