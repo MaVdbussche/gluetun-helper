@@ -47,7 +47,7 @@ This program is meant to be used in combination with the [VPN_PORT_FORWARDING_UP
 environment variable built into Gluetun (see [Gluetun PR#2399](https://github.com/qdm12/gluetun/pull/2399)).
 
 To run this program, simply put the following command as the `VPN_PORT_FORWARDING_UP_COMMAND` environment variable in Gluetun :
-`/bin/sh -c "docker compose --file ./paht/to/compose/file.yml" run --rm gluetun-helper`
+`/bin/sh -c 'docker compose --file ./path/to/compose/file.yml run --rm gluetun-helper'`
 
 You can also consult the `docker-compose.yml` file at the root of this repository for an example configuration.
 
@@ -79,7 +79,7 @@ services:
      networks: [ "some-network" ] # Shared with gluetun-helper
      environment:
        [...]
-       - VPN_PORT_FORWARDING_UP_COMMAND: "/bin/sh -c "docker compose --file ./path/to/compose/file.yml" run --rm gluetun-helper"
+       - VPN_PORT_FORWARDING_UP_COMMAND: "/bin/sh -c 'docker compose --file ./path/to/compose/file.yml run --rm gluetun-helper'"
   qbittorrent:
      [...]
      environment:
