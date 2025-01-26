@@ -7,9 +7,6 @@ import java.io.IOException;
 import com.google.gson.*;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -28,18 +25,11 @@ public class Main {
   private static final String QBITTORRENT_URL = Environment.getEnvOrDefault("QBITTORRENT_URL", null, true);
   private static final String QBITTORRENT_USERNAME = Environment.getEnvOrDefault("QBITTORRENT_USERNAME", "admin", false);
   private static final String QBITTORRENT_PASSWORD = Environment.getEnvOrDefault("QBITTORRENT_PASSWORD", "adminadmin", false);
-  private static final String UPDATE_WINDOW_SECONDS = Environment.getEnvOrDefault("UPDATE_WINDOW_SECONDS", "45", false);
 
   public static void main(String[] args) {
     logger.setLogLevel(LogLevel.valueOf(Environment.getEnvOrDefault("LOG_LEVEL", "INFO", false)));
 
-    Runnable runnable = Main::updatePort;
-
-    // Investigate new Java Virtual threads ?
-    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    int window = Math.max(Integer.parseInt(UPDATE_WINDOW_SECONDS), 5);
-    logger.debug("The script will be executed every " + window + " seconds.");
-    executor.scheduleAtFixedRate(runnable, 0, window, TimeUnit.SECONDS);
+    updatePort();
   }
 
   private static void updatePort() {
