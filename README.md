@@ -52,6 +52,8 @@ To run this program, simply put the following command as the `VPN_PORT_FORWARDIN
 The script/command file is then responsible for starting up `gluetun-helper` with any option you'd like.
 You can consult the `port-forward-up.sh` file at the root of this repository for an example configuration.
 
+Take a look at [GitHub pacakges](https://github.com/MaVdbussche/gluetun-helper/pkgs/container/gluetun-helper/versions) for a list of available Docker tag values.
+
 ## Configuration
 To use this container, you will need to define some environment variables that are specific to your setup.
 Some defaults are provided, but they will most likely not work for you !
